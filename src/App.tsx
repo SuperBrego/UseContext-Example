@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import CharCard from './Pages/Card/CharCard'
+import { useState } from 'react';
+import { MyCharContext } from './Context/CharacterContext';
+import { Character } from './Types/Character';
+import { Character1 } from './Database/ReadyCharacters';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [character, setCharacter] = useState<Character>(Character1);
+
+  const setAbility = (id: number, rank: number) => {
+    let tempCharacter: Character = character;
+    let index: number = tempCharacter.abilities.findIndex(elem => elem.id === id);
+    if(index === -1) return;
+    tempCharacter.abilities[index].rank = rank;
+    setCharacter({...tempCharacter});
+  }
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <MyCharContext.Provider value={{ character, setAbility }}>
+        <CharCard />
+      </MyCharContext.Provider>
     </div>
-  )
+  );
 }
+
 
 export default App
